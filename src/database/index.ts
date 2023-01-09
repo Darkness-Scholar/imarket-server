@@ -1,10 +1,8 @@
-import mySQL from "mysql2"
+import { Sequelize } from "sequelize"
 
-const database = mySQL.createPool({
-    host: '127.0.0.1',
-    port: 3306,
-    user: 'root',
-    password: 'Tungl@ne69'
+let __database__ = new Sequelize("idata", "root", "Tungl@ne69", {
+    host: "127.0.0.1",
+    dialect: "mysql"
 })
 
-export default database
+export default __database__

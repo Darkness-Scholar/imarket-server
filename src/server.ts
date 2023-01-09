@@ -5,26 +5,32 @@ import { Server } from "socket.io"
 import { createClient } from "redis"
 import cors from "cors"
 import bodyParser from "body-parser"
-import database from "./database"
-import Auth from "./routes/auth.router"
-import Middleware from "./services/middleware.service"
-import { UserDTO } from "./dtos"
-import Product from "./routes/product.router"
+import { Sequelize } from "sequelize"
+import user from "./controllers/user/user.router"
 
 declare global {
-    namespace Express {
-      interface Request {
-        user: UserDTO,
-    }
+  var __database__:any
+}
+
+declare global {
+  namespace Express {
+    interface Request {
+      user: any,
   }
 }
+}
+
+global.__database__ = new Sequelize("idata", "root", "Tungl@ne69", {
+  host: "127.0.0.1",
+  dialect: "mysql"
+})
 
 const app = express()
 const server = http.createServer(app)
 
-const redisClient = createClient()
-redisClient.on('error', (err) => console.log('Redis Client Error', err))
-redisClient.connect().then()
+// const redisClient = createClient()
+// redisClient.on('error', (err) => console.log('Redis Client Error', err))
+// redisClient.connect().then()
 
 const io = new Server(server, {
   cors: {
@@ -35,13 +41,27 @@ const io = new Server(server, {
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 app.use(cors())
+// app.use((req, res, next) => ResponseHandler(next))
+// 
+// app.use(async (ctx:any, next:any) => {
+//   try {
+//     await next()
+//     const status = ctx.status || 404
+//     if (status === 404) {
+//       return ctx.res.notFound();
+//     }
+//   } catch (error:any) {
+//     console.log(error)
+//     return ctx.res.internalServerError({ message: error.message })
+//   }
+// })
 
-app.get('/', (req: Request, res: Response) => {
-    res.send("HELLO WORLD")
+app.get('/', async (req: Request, res: Response) => {
+
+    res.send("SUCCESS")
 })
 
-app.use("/auth", Auth)
-app.use("/product", Middleware, Product)
+app.use("/user", user)
 
 interface iPayloadData {
   msg: string
@@ -61,4 +81,4 @@ io.on("connection", socket => {
   })
 })
 
-server.listen(8888, () => console.log(`Server is running on port 1999`))
+server.listen(8888, () => console.log(`Server is running on port 8888`))
