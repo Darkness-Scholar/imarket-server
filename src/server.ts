@@ -7,6 +7,7 @@ import cors from "cors"
 import bodyParser from "body-parser"
 import { Sequelize } from "sequelize"
 import user from "./controllers/user/user.router"
+import search from "./controllers/search/search.router"
 
 declare global {
   var __database__:any
@@ -62,6 +63,7 @@ app.get('/', async (req: Request, res: Response) => {
 })
 
 app.use("/user", user)
+app.use("/search", search)
 
 interface iPayloadData {
   msg: string
