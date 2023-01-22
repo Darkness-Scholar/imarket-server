@@ -6,9 +6,7 @@ interface iUser {
     name: string,
     email: string,
     password: string,
-    role?: string,
     is_active?: boolean,
-    amount?:number,
 }
 
 class User extends Model<iUser> implements iUser {
@@ -17,9 +15,7 @@ class User extends Model<iUser> implements iUser {
     name!: string;
     email!: string;
     password!: string;
-    role?: string;
     is_active?: boolean;
-    amount?:number;
 
     static associate(models: any) {
         User.belongsToMany(models.Project, {
@@ -33,9 +29,12 @@ User.init({
     name: { type: DataTypes.STRING, allowNull: false },
     email: { type: DataTypes.STRING, allowNull: false },
     password: { type: DataTypes.STRING, allowNull: false },
-    role: { type: DataTypes.STRING, defaultValue: "seller" },
     is_active: { type: DataTypes.BOOLEAN, defaultValue: true },
-    amount: { type: DataTypes.FLOAT, defaultValue: 0.0 }
-}, { sequelize: __database__, modelName: 'User', timestamps: true })
+}, { 
+    sequelize: __database__, 
+    modelName: 'User', 
+    timestamps: true, 
+    tableName: 'users'
+})
 
 export default User
